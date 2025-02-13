@@ -1,0 +1,19 @@
+@import './base.scss';
+@import './styles/colors';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: $dark-berry;
+  color: $floral-white;
+}
+
+h1 {
+  font-family: 'Courier Prime', monospace;
+  font-size: 64px;
+  font-weight: 400;
+}
