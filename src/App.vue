@@ -1,9 +1,9 @@
 <template>
-  <h1>momentum</h1>
-  <CubeScene />
+  <RouterView />
 </template>
 
 <script setup>
+import { RouterLink, RouterView } from "vue-router";
 import CubeScene from './components/CubeScene.vue';
 </script>
 
