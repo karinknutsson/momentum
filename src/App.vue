@@ -1,11 +1,10 @@
-<script setup></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <h1>momentum</h1>
+  <CubeScene />
 </template>
+
+<script setup>
+import CubeScene from './components/CubeScene.vue';
+</script>
 
 <style scoped></style>
