@@ -1,4 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Badeen+Display&display=swap");
+
+html,
 body {
-    background: black;
-    color: white;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: black;
+  color: white;
+}
+
+h1 {
+  font-family: "Badeen Display", sans-serif;
+  font-size: 8rem;
+  color: #634deb;
+  font-weight: 400;
+  margin: 0;
+  line-height: 100%;
 }

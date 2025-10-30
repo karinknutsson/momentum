@@ -1,6 +1,5 @@
 <template>
   <main>
-    <h1>momentum</h1>
     <CubeScene />
   </main>
 </template>
