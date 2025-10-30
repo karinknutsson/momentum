@@ -106,11 +106,16 @@ onMounted(() => {
   initScene();
 
   // Material & Mesh
+  const materialParameters = { color: "#ffffff"};
+
   const material = new THREE.ShaderMaterial({
     vertexShader: cubeVertexShader,
     fragmentShader: cubeFragmentShader,
-    side: THREE.DoubleSide,
-    transparent: true
+    uniforms: {
+      uColor: new THREE.Uniform(new THREE.Color(materialParameters.color)),
+    }
+    // side: THREE.DoubleSide,
+    // transparent: true
   });
   mesh = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), material);
   scene.add(mesh);
