@@ -10,6 +10,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import cubeVertexShader from "../assets/shaders/cube/vertex.glsl";
 import cubeFragmentShader from "../assets/shaders/cube/fragment.glsl";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 // Canvas
 const canvas = ref(null);
@@ -24,7 +25,12 @@ const sizes = {
 const scene = new THREE.Scene();
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(
+  75,
+  sizes.width / sizes.height,
+  0.1,
+  1000
+);
 camera.position.set(0, 0, 8);
 scene.add(camera);
 
@@ -35,7 +41,8 @@ let renderer = null;
 let controls = null;
 
 // Objects
-let mesh = null;
+let cubeMesh = null;
+let cubeMaterial = null;
 
 // Clock
 const clock = new THREE.Clock();
@@ -46,9 +53,20 @@ const initScene = () => {
   const ambientLight = new THREE.AmbientLight(0xffffff, 2);
   scene.add(ambientLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xeeff00, 2);
-  directionalLight.position.set(0, 0.5, 1);
+  const directionalLight = new THREE.DirectionalLight(0x00ff00, 50);
+  directionalLight.position.set(4, 3, 4);
   scene.add(directionalLight);
+
+  const pointLight = new THREE.PointLight(0xff0000, 3.5, 40, 0);
+  pointLight.position.set(-2, 2, 2);
+  scene.add(pointLight);
+  // const pointLightHelper = new THREE.PointLightHelper(pointLight);
+  // scene.add(pointLightHelper);
+
+  // const directionalLightHelper = new THREE.DirectionalLightHelper(
+  //   directionalLight,
+  // );
+  // scene.add(directionalLightHelper);
 };
 
 // Renderer
@@ -89,8 +107,11 @@ let animationFrameId;
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
+  // Update material
+  // material.uniforms.uTime.value = elapsedTime;
+
   // Rotate mesh
-  // if (mesh) mesh.rotation.y = elapsedTime * 0.5;
+  // if (cubeMesh) cubeMesh.rotation.y = elapsedTime * 0.5;
 
   // Update controls
   if (controls) controls.update();
@@ -106,19 +127,60 @@ onMounted(() => {
   initScene();
 
   // Material & Mesh
-  const materialParameters = { color: "#ffffff"};
+  const materialParameters = { color: "#18e77c" };
 
-  const material = new THREE.ShaderMaterial({
-    vertexShader: cubeVertexShader,
-    fragmentShader: cubeFragmentShader,
-    uniforms: {
-      uColor: new THREE.Uniform(new THREE.Color(materialParameters.color)),
-    }
-    // side: THREE.DoubleSide,
-    // transparent: true
+  // material = new THREE.ShaderMaterial({
+  //   vertexShader: cubeVertexShader,
+  //   fragmentShader: cubeFragmentShader,
+  //   uniforms: {
+  //     uTime: new THREE.Uniform(0),
+  //     uColor: new THREE.Uniform(new THREE.Color(materialParameters.color)),
+  //   },
+  //   side: THREE.DoubleSide,
+  //   depthWrite: false,
+  //   transparent: true,
+  //   blending: THREE.AdditiveBlending,
+  // });
+
+  const planeMaterial = new THREE.MeshBasicMaterial({
+    color: "#f3f5e1",
   });
-  mesh = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), material);
-  scene.add(mesh);
+  const floorMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(12, 12),
+    planeMaterial
+  );
+  floorMesh.rotation.x = -Math.PI * 0.5;
+  floorMesh.position.y = -3;
+  floorMesh.position.z = 3;
+  scene.add(floorMesh);
+
+  const wallMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(12, 12),
+    planeMaterial
+  );
+  // wallMesh.rotation.x = -Math.PI * 0.5;
+  wallMesh.position.y = 3;
+  wallMesh.position.z = -3;
+  scene.add(wallMesh);
+
+  cubeMaterial = new THREE.MeshPhysicalMaterial({
+    side: THREE.DoubleSide,
+    transparent: true,
+    transmission: 0.99,
+    roughness: 0,
+    color: new THREE.Color("#9e90f5"),
+  });
+
+  cubeMesh = new THREE.Mesh(
+    new RoundedBoxGeometry(3, 3, 3, 5, 0.2),
+    cubeMaterial
+  );
+  // mesh = new THREE.Mesh(new THREE.SphereGeometry(3), material);
+  // mesh = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), material);
+  // cubeMesh.rotation.x = Math.PI * 0.25;
+  // cubeMesh.rotation.y = Math.PI * 0.25;
+  cubeMesh.rotation.y = Math.PI * 0.25;
+  scene.add(cubeMesh);
 
   initRenderer();
   initControls();
